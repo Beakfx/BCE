@@ -1,0 +1,129 @@
+<ShaderNodePreset LimitInputsToTexture="True" SupportsAdaptiveDegradation="False"
+
+Description="Extend the image naturally, matching the original lighting, perspective, and style."
+
+SoftwareVersion="2016.0.0" ShaderType="Matchbox" TimelineUseBack="False" MatteProvider="False"
+SupportsTimeline="False" SupportsTransition="False" SupportsAction="False"
+
+Name="BCE Outpaint">
+
+  <Shader OutputBitDepth="Output" Index="1">
+    <Uniform InputType="Front" Name="input1"
+             DisplayName="Front" Tooltip="Frame for Outaint"
+             Type="sampler2D"
+             GL_TEXTURE_MIN_FILTER="GL_LINEAR"
+             GL_TEXTURE_MAG_FILTER="GL_LINEAR"
+             GL_TEXTURE_WRAP_S="GL_REPEAT"
+             GL_TEXTURE_WRAP_T="GL_REPEAT"
+             Mipmaps="False" NoInput="Error" Index="0">
+    </Uniform>
+
+    <Uniform DisplayName="|             Left:" ChannelName="Left"
+             Type="int" Default="0" Min="0" Max="1024"
+             Inc="8" ResDependent="None"
+             Name="Left" Row="0" Col="1" Page="0"
+             Tooltip="Pixels to add to Left edge">
+    </Uniform>
+
+    <Uniform DisplayName="|             Right:" ChannelName="Right"
+             Type="int" Default="0" Min="0" Max="1024"
+             Inc="8" ResDependent="None"
+             Name="Right" Row="1" Col="1" Page="0"
+             Tooltip="Pixels to add to Right edge">
+    </Uniform>
+
+    <Uniform DisplayName="|             Top:" ChannelName="Top"
+             Type="int" Default="0" Min="0" Max="1024"
+             Inc="8" ResDependent="None"
+             Name="Top" Row="0" Col="2" Page="0"
+             Tooltip="Pixels to add to Top edge">
+    </Uniform>
+
+    <Uniform DisplayName="|             Bottom:"  ChannelName="Bottom"
+             Type="int" Default="0" Min="0" Max="1024"
+             Inc="8" ResDependent="None"
+             Name="Bottom" Row="1" Col="2" Page="0"
+             Tooltip="Pixels to add to Bottom edge">
+    </Uniform>
+    <!-- left, right, top, bottom == Amen -->
+
+    <Uniform DisplayName="Iterations" ChannelName="Iterations"
+             Type="int" Default="4" Min="1" Max="25"
+             Inc="1" ResDependent="None"
+             Name="iterations" Row="0" Col="3" Page="0"
+             Tooltip="Number of Frames to Generate">
+    </Uniform>
+
+    <Uniform DisplayName="Steps" ChannelName="Steps"
+             Type="int" Default="12" Min="1" Max="42"
+             Inc="1" ResDependent="None"
+             Name="steps" Row="1" Col="3" Page="0"
+             Tooltip="Sampler Steps">
+    </Uniform>
+
+    <Uniform DisplayName="Guidance" ChannelName="Guidance"
+             Type="float" Default="29" Min="1" Max="72"
+             Inc="0.1" ResDependent="None"
+             Name="guidance" Row="2" Col="3" Page="0"
+             Tooltip="Flux Guidance Parameter">
+    </Uniform>
+
+    <Uniform DisplayName="Seed  (0=new):  "  ChannelName="Seed"
+             Type="int" Default="0" Min="0" Max="9999999"
+             Inc="1" ResDependent="None"
+             Name="Seed" Row="1" Col="4" Page="0"
+             Tooltip="Ksampler Seed. -- Leave Empty to generate, any other  value will be stored">
+    </Uniform>
+
+    <!-- READ THE BIG COMMENT AT THE END BEFORE EDITING THIS BLOC -->
+    <Uniform DisplayName="Comfy Workflow:" ChannelName="WF_select"
+             Type="int" Default="-1" ValueType="Popup"
+             Name="workflow_sel" Row="1" Col="0" Page="0"
+             Tooltip="Workflow Template Selection">
+      <PopupEntry Title="Flux.1 Fill - 12 steps" Value="-1">    <!-- -1 makes it default, will be 0 index-->
+      </PopupEntry>
+      <PopupEntry Title="Flux.2 Klein - 4 steps " Value="1">
+      </PopupEntry>
+      <PopupEntry Title="future WFs" Value="2">
+      </PopupEntry>
+    </Uniform>
+  </Shader>
+
+  <Page Page="0" Name="Settings" >
+    <Col Name="Workflow Selection" Col="0" Page="0">
+    </Col>
+    <Col Name="Extend  Left / Right" Col="1" Page="0">
+    </Col>
+    <Col Name="Extend  Top / Bottom" Col="2" Page="0">
+    </Col>
+    <Col Name="Sampler Parameters" Col="3" Page="0">
+    </Col>
+    <Col Name="Seed Management" Col="4" Page="0">
+    </Col>
+  </Page>
+</ShaderNodePreset>
+
+<!--
+BCE WORKFLOW POPUP WARNING
+
+Flame saves this popup as a positional integer in the saved .matchbox_node
+ShaderParameters block.
+
+It does NOT save the PopupEntry Title.
+It does NOT appear to save the PopupEntry Value.
+It does NOT save a named Channel, even if ChannelName is set.
+
+Therefore:
+
+    The order of PopupEntry items in this XML must match
+    TEMPLATE_OPTIONS in bce_outpaint.py.
+
+    Append new entries only.
+    Do not reorder existing entries unless you also update Python
+    and accept that old saved setups may point to different templates.
+
+Example:
+    PopupEntry #0 -> TEMPLATE_OPTIONS[0]
+    PopupEntry #1 -> TEMPLATE_OPTIONS[1]
+    PopupEntry #2 -> TEMPLATE_OPTIONS[2]
+-->

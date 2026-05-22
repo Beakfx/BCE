@@ -1,0 +1,606 @@
+{
+  "id": "1d367ebe-cf07-4c87-b73a-db40277e6d53",
+  "revision": 0,
+  "last_node_id": 145,
+  "last_link_id": 321,
+  "nodes": [
+    {
+      "id": 138,
+      "type": "SAM3_TrackPreview",
+      "pos": [
+        -927.6154801471794,
+        -3715.2943582990715
+      ],
+      "size": [
+        399.0104964159234,
+        467.6758491325004
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "track_data",
+          "name": "track_data",
+          "type": "SAM3_TRACK_DATA",
+          "link": 313
+        },
+        {
+          "label": "images",
+          "name": "images",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 317
+        }
+      ],
+      "outputs": [],
+      "title": "SAM3 Track Preview [BCE:PREVIEW]",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.21.1",
+        "Node name for S&R": "SAM3_TrackPreview"
+      },
+      "widgets_values": [
+        0.5,
+        24
+      ],
+      "color": "#233",
+      "bgcolor": "#355"
+    },
+    {
+      "id": 127,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        -2114.362696306863,
+        -3510.377173860766
+      ],
+      "size": [
+        330,
+        140
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            315
+          ]
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            302
+          ]
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": []
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.19.3",
+        "Node name for S&R": "CheckpointLoaderSimple",
+        "models": [
+          {
+            "name": "sam3.1_multiplex_fp16.safetensors",
+            "url": "https://huggingface.co/Comfy-Org/sam3.1/resolve/main/checkpoints/sam3.1_multiplex_fp16.safetensors",
+            "directory": "checkpoints"
+          }
+        ],
+        "enableTabs": false,
+        "tabWidth": 65,
+        "tabXOffset": 10,
+        "hasSecondTab": false,
+        "secondTabText": "Send Back",
+        "secondTabOffset": 80,
+        "secondTabWidth": 65
+      },
+      "widgets_values": [
+        "sam3.1_multiplex_fp16.safetensors"
+      ]
+    },
+    {
+      "id": 137,
+      "type": "SAM3_VideoTrack",
+      "pos": [
+        -1350.037013669035,
+        -3715.543045344135
+      ],
+      "size": [
+        308.946184592553,
+        170.97063862638242
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 314
+        },
+        {
+          "label": "model",
+          "name": "model",
+          "type": "MODEL",
+          "link": 315
+        },
+        {
+          "label": "initial_mask",
+          "name": "initial_mask",
+          "shape": 7,
+          "type": "MASK",
+          "link": null
+        },
+        {
+          "label": "conditioning",
+          "name": "conditioning",
+          "shape": 7,
+          "type": "CONDITIONING",
+          "link": 316
+        }
+      ],
+      "outputs": [
+        {
+          "name": "track_data",
+          "type": "SAM3_TRACK_DATA",
+          "links": [
+            313,
+            318
+          ]
+        }
+      ],
+      "title": "SAM3 Video Track [BCE:VIDTRACK]",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.21.1",
+        "Node name for S&R": "SAM3_VideoTrack"
+      },
+      "widgets_values": [
+        0.5,
+        6,
+        1
+      ],
+      "color": "#233",
+      "bgcolor": "#355"
+    },
+    {
+      "id": 140,
+      "type": "MaskToImage",
+      "pos": [
+        -610,
+        -3970
+      ],
+      "size": [
+        193.2779296875,
+        26
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 319
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            321
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.21.1",
+        "Node name for S&R": "MaskToImage"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 139,
+      "type": "SAM3_TrackToMask",
+      "pos": [
+        -1032.0203439548882,
+        -3973.5711291933108
+      ],
+      "size": [
+        304.9789224732167,
+        58
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "track_data",
+          "name": "track_data",
+          "type": "SAM3_TRACK_DATA",
+          "link": 318
+        }
+      ],
+      "outputs": [
+        {
+          "name": "masks",
+          "type": "MASK",
+          "links": [
+            319
+          ]
+        }
+      ],
+      "title": "SAM3 Track to Mask [BCE:INDEX]",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.21.1",
+        "Node name for S&R": "SAM3_TrackToMask"
+      },
+      "widgets_values": [
+        ""
+      ],
+      "color": "#233",
+      "bgcolor": "#355"
+    },
+    {
+      "id": 142,
+      "type": "VHS_VideoCombine",
+      "pos": [
+        -350,
+        -3970
+      ],
+      "size": [
+        342.9861832093269,
+        518.3247450517935
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 321
+        },
+        {
+          "name": "audio",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "meta_batch",
+          "shape": 7,
+          "type": "VHS_BatchManager",
+          "link": null
+        },
+        {
+          "name": "vae",
+          "shape": 7,
+          "type": "VAE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": null
+        }
+      ],
+      "title": "Video Combine 🎥🅥🅗🅢 [BCE:SAVE]",
+      "properties": {
+        "cnr_id": "comfyui-videohelpersuite",
+        "ver": "4ee72c065db22c9d96c2427954dc69e7b908444b",
+        "Node name for S&R": "VHS_VideoCombine"
+      },
+      "widgets_values": {
+        "frame_rate": 24,
+        "loop_count": 0,
+        "filename_prefix": "bce_sam3",
+        "format": "video/h264-mp4",
+        "pix_fmt": "yuv420p",
+        "crf": 18,
+        "save_metadata": true,
+        "trim_to_audio": false,
+        "pingpong": false,
+        "save_output": true,
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "filename": "bce_sam3_00004.mp4",
+            "subfolder": "",
+            "type": "output",
+            "format": "video/h264-mp4",
+            "frame_rate": 24,
+            "workflow": "bce_sam3_00004.png",
+            "fullpath": "/mnt/DATA/temp/genAI/ComfyUI/output/bce_sam3_00004.mp4"
+          }
+        }
+      },
+      "color": "#233",
+      "bgcolor": "#355"
+    },
+    {
+      "id": 132,
+      "type": "VHS_LoadVideo",
+      "pos": [
+        -2551.480711300425,
+        -3710
+      ],
+      "size": [
+        375.59067965356553,
+        511.54782682150085
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "meta_batch",
+          "shape": 7,
+          "type": "VHS_BatchManager",
+          "link": null
+        },
+        {
+          "name": "vae",
+          "shape": 7,
+          "type": "VAE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            314,
+            317
+          ]
+        },
+        {
+          "name": "frame_count",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "video_info",
+          "type": "VHS_VIDEOINFO",
+          "links": null
+        }
+      ],
+      "title": "Load Video (Upload) 🎥🅥🅗🅢 [BCE:LOAD]",
+      "properties": {
+        "cnr_id": "comfyui-videohelpersuite",
+        "ver": "4ee72c065db22c9d96c2427954dc69e7b908444b",
+        "Node name for S&R": "VHS_LoadVideo"
+      },
+      "widgets_values": {
+        "video": "drone_attack.mp4",
+        "force_rate": 0,
+        "custom_width": 0,
+        "custom_height": 0,
+        "frame_load_cap": 0,
+        "skip_first_frames": 0,
+        "select_every_nth": 1,
+        "format": "None",
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "filename": "drone_attack.mp4",
+            "type": "input",
+            "format": "video/mp4",
+            "force_rate": 0,
+            "custom_width": 0,
+            "custom_height": 0,
+            "frame_load_cap": 0,
+            "skip_first_frames": 0,
+            "select_every_nth": 1
+          }
+        }
+      },
+      "color": "#233",
+      "bgcolor": "#355"
+    },
+    {
+      "id": 125,
+      "type": "CLIPTextEncode",
+      "pos": [
+        -1741.4656712808708,
+        -3492.303824910286
+      ],
+      "size": [
+        381.20966974579255,
+        164.54494246151808
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 302
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            316
+          ]
+        }
+      ],
+      "title": "CLIP Text Encode (Prompt) [BCE:PROMPT]",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.19.3",
+        "Node name for S&R": "CLIPTextEncode",
+        "enableTabs": false,
+        "tabWidth": 65,
+        "tabXOffset": 10,
+        "hasSecondTab": false,
+        "secondTabText": "Send Back",
+        "secondTabOffset": 80,
+        "secondTabWidth": 65
+      },
+      "widgets_values": [
+        "mask prompt"
+      ],
+      "color": "#233",
+      "bgcolor": "#355"
+    }
+  ],
+  "links": [
+    [
+      302,
+      127,
+      1,
+      125,
+      0,
+      "CLIP"
+    ],
+    [
+      313,
+      137,
+      0,
+      138,
+      0,
+      "SAM3_TRACK_DATA"
+    ],
+    [
+      314,
+      132,
+      0,
+      137,
+      0,
+      "IMAGE"
+    ],
+    [
+      315,
+      127,
+      0,
+      137,
+      1,
+      "MODEL"
+    ],
+    [
+      316,
+      125,
+      0,
+      137,
+      3,
+      "CONDITIONING"
+    ],
+    [
+      317,
+      132,
+      0,
+      138,
+      1,
+      "IMAGE"
+    ],
+    [
+      318,
+      137,
+      0,
+      139,
+      0,
+      "SAM3_TRACK_DATA"
+    ],
+    [
+      319,
+      139,
+      0,
+      140,
+      0,
+      "MASK"
+    ],
+    [
+      321,
+      140,
+      0,
+      142,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 1.0692153261335358,
+      "offset": [
+        2633.765897869986,
+        3861.0841454839574
+      ]
+    },
+    "frontendVersion": "1.43.18",
+    "reroutes": [
+      {
+        "id": 3,
+        "parentId": 4,
+        "pos": [
+          -933.7874686525437,
+          -3812.659085387301
+        ],
+        "linkIds": [
+          317
+        ]
+      },
+      {
+        "id": 4,
+        "pos": [
+          -2168.74887139911,
+          -3809.9842266099363
+        ],
+        "linkIds": [
+          317
+        ]
+      },
+      {
+        "id": 5,
+        "pos": [
+          -1778.7534413700737,
+          -3678.834523365074
+        ],
+        "linkIds": [
+          315
+        ]
+      }
+    ],
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true,
+    "linkExtensions": [
+      {
+        "id": 315,
+        "parentId": 5
+      },
+      {
+        "id": 317,
+        "parentId": 3
+      }
+    ]
+  },
+  "version": 0.4
+}

@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.pyo
+*.log
+*.tmp
+*.bak
+*.swp
+*.mov
+*.mp4
+dev/
+.claude/
+.codex
+.vscode/
+
+

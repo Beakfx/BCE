@@ -1,0 +1,129 @@
+{
+  "125": {
+    "inputs": {
+      "text": "mask prompt",
+      "clip": [
+        "127",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt) [BCE:PROMPT]"
+    }
+  },
+  "127": {
+    "inputs": {
+      "ckpt_name": "sam3.1_multiplex_fp16.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Load Checkpoint"
+    }
+  },
+  "132": {
+    "inputs": {
+      "video": "drone_attack.mp4",
+      "force_rate": 0,
+      "custom_width": 0,
+      "custom_height": 0,
+      "frame_load_cap": 0,
+      "skip_first_frames": 0,
+      "select_every_nth": 1,
+      "format": "None"
+    },
+    "class_type": "VHS_LoadVideo",
+    "_meta": {
+      "title": "Load Video (Upload) 🎥🅥🅗🅢 [BCE:LOAD]"
+    }
+  },
+  "137": {
+    "inputs": {
+      "detection_threshold": 0.5,
+      "max_objects": 6,
+      "detect_interval": 1,
+      "images": [
+        "132",
+        0
+      ],
+      "model": [
+        "127",
+        0
+      ],
+      "conditioning": [
+        "125",
+        0
+      ]
+    },
+    "class_type": "SAM3_VideoTrack",
+    "_meta": {
+      "title": "SAM3 Video Track [BCE:VIDTRACK]"
+    }
+  },
+  "138": {
+    "inputs": {
+      "opacity": 0.5,
+      "fps": 24,
+      "video-preview": "",
+      "track_data": [
+        "137",
+        0
+      ],
+      "images": [
+        "132",
+        0
+      ]
+    },
+    "class_type": "SAM3_TrackPreview",
+    "_meta": {
+      "title": "SAM3 Track Preview [BCE:PREVIEW]"
+    }
+  },
+  "139": {
+    "inputs": {
+      "object_indices": "",
+      "track_data": [
+        "137",
+        0
+      ]
+    },
+    "class_type": "SAM3_TrackToMask",
+    "_meta": {
+      "title": "SAM3 Track to Mask [BCE:INDEX]"
+    }
+  },
+  "140": {
+    "inputs": {
+      "mask": [
+        "139",
+        0
+      ]
+    },
+    "class_type": "MaskToImage",
+    "_meta": {
+      "title": "Convert Mask to Image"
+    }
+  },
+  "142": {
+    "inputs": {
+      "frame_rate": 24,
+      "loop_count": 0,
+      "filename_prefix": "bce_sam3",
+      "format": "video/h264-mp4",
+      "pix_fmt": "yuv420p",
+      "crf": 18,
+      "save_metadata": true,
+      "trim_to_audio": false,
+      "pingpong": false,
+      "save_output": true,
+      "images": [
+        "140",
+        0
+      ]
+    },
+    "class_type": "VHS_VideoCombine",
+    "_meta": {
+      "title": "Video Combine 🎥🅥🅗🅢 [BCE:SAVE]"
+    }
+  }
+}

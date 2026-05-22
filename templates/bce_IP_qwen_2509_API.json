@@ -1,0 +1,265 @@
+{
+  "8": {
+    "inputs": {
+      "samples": [
+        "144",
+        0
+      ],
+      "vae": [
+        "136",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "37": {
+    "inputs": {
+      "unet_name": "qwen_image_edit_2509_fp8_e4m3fn.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "Load Diffusion Model"
+    }
+  },
+  "38": {
+    "inputs": {
+      "clip_name": "qwen_2.5_vl_7b_fp8_scaled.safetensors",
+      "type": "qwen_image",
+      "device": "default"
+    },
+    "class_type": "CLIPLoader",
+    "_meta": {
+      "title": "Load CLIP"
+    }
+  },
+  "39": {
+    "inputs": {
+      "vae_name": "qwen_image_vae.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "66": {
+    "inputs": {
+      "shift": 3,
+      "model": [
+        "89",
+        0
+      ]
+    },
+    "class_type": "ModelSamplingAuraFlow",
+    "_meta": {
+      "title": "ModelSamplingAuraFlow"
+    }
+  },
+  "75": {
+    "inputs": {
+      "strength": 1,
+      "model": [
+        "66",
+        0
+      ]
+    },
+    "class_type": "CFGNorm",
+    "_meta": {
+      "title": "CFGNorm"
+    }
+  },
+  "88": {
+    "inputs": {
+      "pixels": [
+        "147",
+        0
+      ],
+      "vae": [
+        "39",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE Encode"
+    }
+  },
+  "89": {
+    "inputs": {
+      "lora_name": "Qwen-Image-Lightning-4steps-V1.0.safetensors",
+      "strength_model": 1,
+      "model": [
+        "37",
+        0
+      ]
+    },
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "Load LoRA"
+    }
+  },
+  "111": {
+    "inputs": {
+      "prompt": "Inpaint prompt.",
+      "clip": [
+        "38",
+        0
+      ],
+      "vae": [
+        "39",
+        0
+      ],
+      "image1": [
+        "147",
+        0
+      ]
+    },
+    "class_type": "TextEncodeQwenImageEditPlus",
+    "_meta": {
+      "title": "TextEncodeQwenImageEditPlus [BCE:PROMPT]"
+    }
+  },
+  "124": {
+    "inputs": {
+      "samples": [
+        "88",
+        0
+      ],
+      "mask": [
+        "147",
+        1
+      ]
+    },
+    "class_type": "SetLatentNoiseMask",
+    "_meta": {
+      "title": "Set Latent Noise Mask"
+    }
+  },
+  "136": {
+    "inputs": {
+      "vae_name": "qwen_image_vae.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "139": {
+    "inputs": {
+      "noise_seed": 137726204913373
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "RandomNoise [BCE:SEED]"
+    }
+  },
+  "140": {
+    "inputs": {
+      "sampler_name": "euler"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "KSamplerSelect"
+    }
+  },
+  "142": {
+    "inputs": {
+      "scheduler": "simple",
+      "steps": 4,
+      "denoise": 1,
+      "model": [
+        "75",
+        0
+      ]
+    },
+    "class_type": "BasicScheduler",
+    "_meta": {
+      "title": "BasicScheduler [BCE:STEPS]"
+    }
+  },
+  "144": {
+    "inputs": {
+      "noise": [
+        "139",
+        0
+      ],
+      "guider": [
+        "145",
+        0
+      ],
+      "sampler": [
+        "140",
+        0
+      ],
+      "sigmas": [
+        "142",
+        0
+      ],
+      "latent_image": [
+        "124",
+        0
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "SamplerCustomAdvanced"
+    }
+  },
+  "145": {
+    "inputs": {
+      "model": [
+        "75",
+        0
+      ],
+      "conditioning": [
+        "111",
+        0
+      ]
+    },
+    "class_type": "BasicGuider",
+    "_meta": {
+      "title": "BasicGuider"
+    }
+  },
+  "147": {
+    "inputs": {
+      "source_path": "/path/to/input",
+      "start_frame": 1,
+      "frame_limit": 0,
+      "input_colorspace": "Linear (sRGB)",
+      "fps_override": 0
+    },
+    "class_type": "◎ RadianceDigitalCinemaRead",
+    "_meta": {
+      "title": "◎ Radiance Read [BCE:LOAD]"
+    }
+  },
+  "148": {
+    "inputs": {
+      "filename_prefix": "bce_result",
+      "write_mode": "Sequence",
+      "output_format": "Image Sequence — EXR (32-bit)",
+      "fps": 24,
+      "quality": 10,
+      "output_color_space": "Linear (sRGB)",
+      "broadcast_safe": false,
+      "output_path": "",
+      "start_frame": 1,
+      "bit_depth": "16-bit Half Float",
+      "compression": "ZIP",
+      "alpha_mode": "From Image",
+      "custom_metadata": "",
+      "image": [
+        "8",
+        0
+      ]
+    },
+    "class_type": "◎ RadianceDigitalCinemaWrite",
+    "_meta": {
+      "title": "◎ Radiance Write [BCE:SAVE]"
+    }
+  }
+}

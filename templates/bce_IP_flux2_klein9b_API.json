@@ -1,0 +1,337 @@
+{
+  "102": {
+    "inputs": {
+      "vae_name": "flux2-vae.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "104": {
+    "inputs": {
+      "samples": [
+        "209",
+        0
+      ],
+      "vae": [
+        "102",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "107": {
+    "inputs": {
+      "text": "",
+      "clip": [
+        "146",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode [BCE:PROMPT]"
+    }
+  },
+  "112": {
+    "inputs": {
+      "conditioning": [
+        "107",
+        0
+      ],
+      "latent": [
+        "150",
+        0
+      ]
+    },
+    "class_type": "ReferenceLatent",
+    "_meta": {
+      "title": "ReferenceLatent"
+    }
+  },
+  "126": {
+    "inputs": {
+      "unet_name": "flux-2-klein-9b.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "Load Diffusion Model"
+    }
+  },
+  "136": {
+    "inputs": {
+      "conditioning": [
+        "107",
+        0
+      ]
+    },
+    "class_type": "ConditioningZeroOut",
+    "_meta": {
+      "title": "ConditioningZeroOut"
+    }
+  },
+  "146": {
+    "inputs": {
+      "clip_name": "qwen_3_8b.safetensors",
+      "type": "flux2",
+      "device": "default"
+    },
+    "class_type": "CLIPLoader",
+    "_meta": {
+      "title": "Load CLIP"
+    }
+  },
+  "150": {
+    "inputs": {
+      "pixels": [
+        "192",
+        0
+      ],
+      "vae": [
+        "102",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE Encode"
+    }
+  },
+  "185": {
+    "inputs": {
+      "image": [
+        "197",
+        0
+      ]
+    },
+    "class_type": "GetImageSize+",
+    "_meta": {
+      "title": "🔧 Get Image Size"
+    }
+  },
+  "189": {
+    "inputs": {
+      "expression": "(ceil(a / 16) * 16)-a\n",
+      "variables.a": [
+        "185",
+        1
+      ]
+    },
+    "class_type": "SimpleCalculatorKJ",
+    "_meta": {
+      "title": "SimpleCalculatorKJ"
+    }
+  },
+  "192": {
+    "inputs": {
+      "left": 0,
+      "top": 0,
+      "right": [
+        "193",
+        1
+      ],
+      "bottom": [
+        "189",
+        1
+      ],
+      "feathering": 0,
+      "image": [
+        "197",
+        0
+      ],
+      "mask": [
+        "197",
+        1
+      ]
+    },
+    "class_type": "ImagePadForOutpaintMasked",
+    "_meta": {
+      "title": "Image Pad For Outpaint Masked"
+    }
+  },
+  "193": {
+    "inputs": {
+      "expression": "(ceil(a / 16) * 16)-a\n",
+      "variables.a": [
+        "185",
+        0
+      ]
+    },
+    "class_type": "SimpleCalculatorKJ",
+    "_meta": {
+      "title": "SimpleCalculatorKJ"
+    }
+  },
+  "195": {
+    "inputs": {
+      "width": [
+        "185",
+        0
+      ],
+      "height": [
+        "185",
+        1
+      ],
+      "position": "top-left",
+      "x_offset": 0,
+      "y_offset": 0,
+      "image": [
+        "104",
+        0
+      ]
+    },
+    "class_type": "ImageCrop+",
+    "_meta": {
+      "title": "🔧 Image Crop"
+    }
+  },
+  "197": {
+    "inputs": {
+      "source_path": "/path/to/input",
+      "start_frame": 1,
+      "frame_limit": 0,
+      "input_colorspace": "Linear (sRGB)",
+      "fps_override": 0
+    },
+    "class_type": "◎ RadianceDigitalCinemaRead",
+    "_meta": {
+      "title": "◎ Radiance Read [BCE:LOAD]"
+    }
+  },
+  "198": {
+    "inputs": {
+      "filename_prefix": "bce_result",
+      "write_mode": "Sequence",
+      "output_format": "Image Sequence — EXR (32-bit)",
+      "fps": 24,
+      "quality": 10,
+      "output_color_space": "Linear (sRGB)",
+      "broadcast_safe": false,
+      "output_path": "",
+      "start_frame": 1,
+      "bit_depth": "16-bit Half Float",
+      "compression": "ZIP",
+      "alpha_mode": "From Image",
+      "custom_metadata": "",
+      "image": [
+        "195",
+        0
+      ]
+    },
+    "class_type": "◎ RadianceDigitalCinemaWrite",
+    "_meta": {
+      "title": "◎ Radiance Write [BCE:SAVE]"
+    }
+  },
+  "203": {
+    "inputs": {
+      "cfg": 1,
+      "model": [
+        "126",
+        0
+      ],
+      "positive": [
+        "112",
+        0
+      ],
+      "negative": [
+        "136",
+        0
+      ]
+    },
+    "class_type": "CFGGuider",
+    "_meta": {
+      "title": "CFGGuider"
+    }
+  },
+  "205": {
+    "inputs": {
+      "sampler_name": "dpmpp_2m"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "KSamplerSelect"
+    }
+  },
+  "206": {
+    "inputs": {
+      "steps": 4,
+      "width": 1024,
+      "height": 1024
+    },
+    "class_type": "Flux2Scheduler",
+    "_meta": {
+      "title": "Flux2Scheduler [BCE:STEPS]"
+    }
+  },
+  "207": {
+    "inputs": {
+      "noise_seed": 137726204913368
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "RandomNoise [BCE:SEED]"
+    }
+  },
+  "209": {
+    "inputs": {
+      "noise": [
+        "207",
+        0
+      ],
+      "guider": [
+        "203",
+        0
+      ],
+      "sampler": [
+        "205",
+        0
+      ],
+      "sigmas": [
+        "206",
+        0
+      ],
+      "latent_image": [
+        "216",
+        0
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "SamplerCustomAdvanced"
+    }
+  },
+  "216": {
+    "inputs": {
+      "samples": [
+        "150",
+        0
+      ],
+      "mask": [
+        "219",
+        0
+      ]
+    },
+    "class_type": "SetLatentNoiseMask",
+    "_meta": {
+      "title": "Set Latent Noise Mask"
+    }
+  },
+  "219": {
+    "inputs": {
+      "mask": [
+        "192",
+        1
+      ]
+    },
+    "class_type": "InvertMask",
+    "_meta": {
+      "title": "InvertMask"
+    }
+  }
+}

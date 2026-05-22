@@ -1,0 +1,141 @@
+<ShaderNodePreset LimitInputsToTexture="True" SupportsAdaptiveDegradation="False"
+
+Description="mask prompt"
+
+SoftwareVersion="2016.0.0" ShaderType="Matchbox" TimelineUseBack="False" MatteProvider="False"
+SupportsTimeline="False" SupportsTransition="False" SupportsAction="False"
+
+ Name="BCE SAM">
+
+  <Shader Index="1" OutputBitDepth="Output">
+    <Uniform Index="0" InputType="Front" Name="input1"
+             DisplayName="Front" Tooltip="Shot to Mask"
+             Type="sampler2D"
+             GL_TEXTURE_MIN_FILTER="GL_LINEAR"
+             GL_TEXTURE_MAG_FILTER="GL_LINEAR"
+             GL_TEXTURE_WRAP_S="GL_REPEAT"
+             GL_TEXTURE_WRAP_T="GL_REPEAT"
+             Mipmaps="False" NoInput="Error" >
+    </Uniform>
+
+
+    <!-- READ THE BIG COMMENT AT THE END BEFORE EDITING THIS BLOC -->
+    <Uniform DisplayName="Comfy Workflow:" ChannelName="WF_select"
+             Type="int" Default="-1" ValueType="Popup"
+             Name="workflow_sel" Row="1" Col="0" Page="0"
+             Tooltip="Workflow Template Selection">
+      <PopupEntry Title="SAM3 Text Prompt" Value="-1">    <!-- -1 makes it default, will be 0 index-->
+        </PopupEntry>
+      <PopupEntry Title="<your name here>" Value="1">
+        </PopupEntry>
+    </Uniform>
+
+
+
+<!--Due to arcane BS beyond my control, this radio button/bool thing has to stay here
+in the second (which turns into 1 in this zero-indexed hellscape) position in the file,
+or else parsing the saves will break. So edit away, just make sure this Uniform
+is the second one that appeasrs
+-->
+    <Uniform ChannelName="preview_mode"
+        Type="bool" DisplayName="Preview Mask Ids" Name="preview_mode" 
+        Tooltip="Preview one frame for mask Ids and prompt adherence" 
+        Row="0" Col="3" Page="0" Default="False" >
+    </Uniform>
+
+
+<!-- First col for 0-2-->
+    <Uniform DisplayName="Mask id 0  :  " ChannelName="Mask_0"
+             Type="int" Default="0" Min="0" Max="1"
+             Inc="1" ResDependent="None"
+             Name="iterations" Row="0" Col="1" Page="0"
+             Tooltip="Use '1' to include, '0' to ignore">
+    </Uniform>
+    <Uniform DisplayName="Mask id 1  :  " ChannelName="Mask_1"
+             Type="int" Default="0" Min="0" Max="1"
+             Inc="1" ResDependent="None"
+             Name="iterations" Row="1" Col="1" Page="0"
+             Tooltip="Use '1' to include, '0' to ignore">
+    </Uniform>
+    <Uniform DisplayName="Mask id 2  :  " ChannelName="Mask_2"
+             Type="int" Default="0" Min="0" Max="1"
+             Inc="1" ResDependent="None"
+             Name="iterations" Row="2" Col="1" Page="0"
+             Tooltip="Use '1' to include, '0' to ignore">
+    </Uniform>
+
+<!-- Second col for 3-6 -->
+    <Uniform DisplayName="Mask id 3  :  " ChannelName="Mask_3"
+             Type="int" Default="0" Min="0" Max="1"
+             Inc="1" ResDependent="None"
+             Name="iterations" Row="0" Col="2" Page="0"
+             Tooltip="Use '1' to include, '0' to ignore">
+    </Uniform>
+    <Uniform DisplayName="Mask id 4  :  " ChannelName="Mask_4"
+             Type="int" Default="0" Min="0" Max="1"
+             Inc="1" ResDependent="None"
+             Name="iterations" Row="1" Col="2" Page="0"
+             Tooltip="Use '1' to include, '0' to ignore">
+    </Uniform>
+    <Uniform DisplayName="Mask id 5  :  " ChannelName="Mask_5"
+             Type="int" Default="0" Min="0" Max="1"
+             Inc="1" ResDependent="None"
+             Name="iterations" Row="2" Col="2" Page="0"
+             Tooltip="Use '1' to include, '0' to ignore">
+    </Uniform>
+
+
+    <Uniform DisplayName="Threshold " ChannelName="Threshold"
+             Type="float" Default="0.5" Min="0" Max="1.0"
+             Inc="0.05" ResDependent="None"
+             Name="steps" Row="0" Col="4" Page="0"
+             Tooltip="Object detection Threshold, higher is more confident,
+              lower tries for more">
+    </Uniform>
+    <Uniform DisplayName="Max Objects : " ChannelName="max_objects"
+             Type="int" Default="6" Min="0" Max="16" Inc="1" ResDependent="None"
+             Name="max_obj" Row="1" Col="4" Page="0"
+             Tooltip="Max objects to detect, lower may be faster and can keep
+              the results clean. Higher if you need them">
+    </Uniform>
+
+  </Shader>
+
+  <Page Page="0" Name="Settings" >
+    <Col Name="Workflow Selection" Col="0" Page="0">
+    </Col>
+    <Col Name="Mask Selection" Col="1" Page="0">
+    </Col>
+    <Col Name="All Masks 0 = include all." Col="2" Page="0">
+    </Col>
+    <Col Name="" Col="3" Page="0">
+    </Col>
+    <Col Name="Seed Management" Col="4" Page="0">
+    </Col>
+  </Page>
+</ShaderNodePreset>
+
+<!--
+BCE WORKFLOW POPUP WARNING
+
+Flame saves this popup as a positional integer in the saved .matchbox_node
+ShaderParameters block.
+
+It does NOT save the PopupEntry Title.
+It does NOT appear to save the PopupEntry Value.
+It does NOT save a named Channel, even if ChannelName is set.
+
+Therefore:
+
+    The order of PopupEntry items in this XML must match
+    TEMPLATE_OPTIONS in bce_inpaint.py (in this case), or whichever python hook you're using
+
+    Append new entries only.
+    Do not reorder existing entries unless you also update Python
+    and accept that old saved setups may point to different templates.
+
+Example:
+    PopupEntry #0 -> TEMPLATE_OPTIONS[0]
+    PopupEntry #1 -> TEMPLATE_OPTIONS[1]
+    PopupEntry #2 -> TEMPLATE_OPTIONS[2]
+-->
