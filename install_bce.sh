@@ -35,6 +35,7 @@ mkdir -p \
     "$USER_ROOT/matchbox" \
     "$USER_ROOT/templates" \
     "$USER_ROOT/templates/write_nodes" \
+    "$USER_ROOT/templates/gui_versions" \
     "$USER_ROOT/config" \
     "$USER_ROOT/bce_jobs"
 

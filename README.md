@@ -2,13 +2,10 @@
 
 **Bring ComfyUI workflows into Autodesk Flame's Batch.**
 
-![BCE nodes in a Flame Batch schematic — Outpaint, Inpaint, and SAM, with the Inpaint note open](bce_readme_graphic.png)
+![BCE nodes in a Flame Batch schematic — Outpaint, Inpaint, and SAM, with the Inpaint note open](docs/bce_readme_graphic.png)
 
-BCE is a Python hook system for Flame. A BCE node reads parameters from
-a familiar Matchbox UI, patches a ComfyUI workflow template with those
-values, and renders through your chosen backend — local Comfy, a LAN
-render node, or Comfy Cloud. The result imports back into Flame as a
-cached clip.
+BCE is a whole system for using and making Batch nodes that do Comfy workflows. A BCE node reads parameters in our familiar UI, patches a ComfyUI workflow template with those
+values, and renders through your chosen backend — local Comfy, a LAN render node, or Comfy Cloud. The result imports back into Flame as a cached clip. All your Comfy settings, including seeds, are saved in your Batch setups.
 
 If you've ever wanted to drop a ComfyUI workflow into the middle of a
 Batch tree without leaving Flame, this is that.
@@ -17,11 +14,11 @@ Batch tree without leaving Flame, this is that.
 
 ## What's in the box
 
-Three node categories, each wrapping a class of Comfy workflow:
+Three node categories, each with several templates, covering a class of Comfy workflow:
 
 - **BCE Outpaint** — extend single frames
 - **BCE Inpaint** — replace or remove content using a matte
-- **BCE SAM** — video segmentation and tracking, with a preview-then-render flow
+- **BCE SAM** — use Segment Anything Models to generate mattes. Better than the Semantic keyer and faster than whatever Magic Mask thing you were doing. 
 
 Three render backends, switched with a toggle in Setup:
 
@@ -29,8 +26,7 @@ Three render backends, switched with a toggle in Setup:
 - **LAN** — ComfyUI on a render node, via a shared filesystem
 - **Cloud** — Comfy Cloud (account + API key)
 
-You can use more than one — local for fast iteration, cloud when the
-GPU is busy or you're on a Mac.
+You can use more than one — local for fast iteration, LAN if you have a render node, or cloud for offsite rendering. Cloud is good for when your GPU is busy, and great if you're on a Mac.
 
 ---
 
@@ -61,7 +57,7 @@ Comfy" workflow:
 - **Three backends, one workflow.** Switch between local, LAN, and
   Comfy Cloud with a toggle in Setup. The same BCE template runs on
   all three (with some node compatibility caveats — see
-  [workflows.md](workflows.md)).
+  [workflows.md](docs/workflows.md)).
 - **No black-box patching.** Every shipped template is a normal
   ComfyUI JSON. The `[BCE:*]` tag contract is the only thing BCE
   cares about; everything else is yours to inspect, change, or replace.
@@ -83,18 +79,18 @@ Download the release zip, unzip, run the installer:
 
 Then **BCE → Setup and Config** in Flame.
 
-See **[install.md](install.md)** for the full walkthrough, including
+See **[install.md](docs/install.md)** for the full walkthrough, including
 picking and configuring a backend.
 
 ---
 
 ## Documentation
 
-- **[install.md](install.md)** — install, setup, backend choice
-- **[usage.md](usage.md)** — the prep/launch/import lifecycle, seeds, job folders
-- **[workflows.md](workflows.md)** — per-template guidance, backend compatibility
-- **[troubleshooting.md](troubleshooting.md)** — common errors and fixes
-- **[comfy_install.md](comfy_install.md)** — installing ComfyUI on Linux
+- **[install.md](docs/install.md)** — install, setup, backend choice
+- **[usage.md](docs/usage.md)** — the prep/launch/import lifecycle, seeds, job folders
+- **[workflows.md](docs/workflows.md)** — per-template guidance, backend compatibility
+- **[troubleshooting.md](docs/troubleshooting.md)** — common errors and fixes
+- **[comfy_install.md](docs/comfy_install.md)** — installing ComfyUI on Linux
 - **[GLOSSARY.md](GLOSSARY.md)** — terms, naming conventions, job folder layout
 - **[CLAUDE.md](CLAUDE.md)** — repo context, for AI assistants and contributors
 
@@ -145,7 +141,7 @@ for the contract details.
 
 - ComfyUI, the engine BCE drives.
 - The Logik community, especially Michael V (pyflame.com) for the Flame
-  Python style and reference scripts that shaped BCE's shape.
+  Python style and reference scripts that helped define BCE's shape.
 - The Radiance Digital Cinema custom nodes for the EXR pipeline.
 
 ---
@@ -159,4 +155,4 @@ Find me on [Logik](https://forum.logik.tv).
 
 ## License
 
-See [license](license).
+See [license](docs/license).

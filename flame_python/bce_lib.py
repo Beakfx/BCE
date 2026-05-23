@@ -1,7 +1,7 @@
 #-------------------------------------
 # BCE - Shared Library
 #
-# BCE VERSION 0.21.0
+# BCE VERSION 1.0.0
 #
 #-------------------------------------
 
@@ -32,7 +32,7 @@ import pyflame_lib_bce as ui
 # ------------------------------------------------
 
 SCRIPT_NAME = "BCE"
-SCRIPT_VERSION = "v0.20.1"
+SCRIPT_VERSION = "1.0.0"
 
 # ------------------------------------------------
 # BCE install paths
