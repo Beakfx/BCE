@@ -273,25 +273,25 @@ def get_batch_custom_ui_actions():
                     "name": "Render Preview",
                     "isVisible": lambda sel: get_sam_next_action(sel) == "preview",
                     "execute": lambda sel: bce.launch_video_transport_job(sel, meta_key="sam", label="SAM"),
-                    "minimumVersion": "2024.1.0"
+                    "minimumVersion": "2023.1.0"
                 },
                 {
                     "name": "Render Mattes",
                     "isVisible": lambda sel: get_sam_next_action(sel) == "render",
                     "execute": lambda sel: bce.launch_video_transport_job(sel, meta_key="sam", label="SAM"),
-                    "minimumVersion": "2024.1.0"
+                    "minimumVersion": "2023.1.0"
                 },
                 {
                     "name": "Launch Comfy",
                     "isVisible": lambda sel: get_bce_job_type(sel) in ("ip", "op"),
                     "execute": lambda sel: bce_launch(sel),
-                    "minimumVersion": "2024.1.0"
+                    "minimumVersion": "2023.1.0"
                 },
                 {
                     "name": "Results Import...",
                     "isVisible": lambda sel: get_bce_job_type(sel) in ("sam", "ip", "op"),
                     "execute": import_result,
-                    "minimumVersion": "2024.1.0"
+                    "minimumVersion": "2023.1.0"
                 },
             ],
         }

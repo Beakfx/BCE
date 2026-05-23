@@ -1822,12 +1822,12 @@ def get_main_menu_custom_ui_actions():
                 {
                     "name": "Setup and Config",
                     "execute": setup,
-                    "minimumVersion": "2024.1"
+                    "minimumVersion": "2023.1"
                 },
                 {
                     "name": "Purge old Jobs...",
                     "execute": cleanup_jobs_dir,
-                    "minimumVersion": "2024.1"
+                    "minimumVersion": "2023.1"
                 },
             ]
         }

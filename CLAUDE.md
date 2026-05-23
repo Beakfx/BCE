@@ -76,6 +76,7 @@ their shape.
 | `pyflame_lib_bce.py`                   | **Do not edit.** Vendored PyFlame UI library (Michael Vaglienty). Treat like a dependency. |
 | Matchbox files (`.xml`, `.glsl`)       | **Do not edit without asking.** Authored by the dev. `.mx` is a compiled/closed-source matchbox shader — not used or wanted here; BCE uses plain `.xml` menus and pass-through `.glsl` shaders only. |
 | ComfyUI templates (`*_API.json`, GUI versions) | **Do not edit without asking.** Workflow-author territory. |
+| `docs/*.md`                            | **Do not edit without asking.** User-facing documentation. |
 | `.clip` / OpenClip files               | **Do not edit.** Flame-generated.                          |
 
 If a Python change appears to require an edit to one of the protected
@@ -130,10 +131,12 @@ Flame provides two channels and BCE uses both deliberately:
   `flame*_app.log`). Use for diagnostic detail that would just be
   noise in the artist's UI.
 
-`bce_lib` provides `msg()` for artist-facing output. A `log()`
-helper (print-only, no console) may be added to bce_lib during the
-cleanup pass to give callers a way to write diagnostic detail without
-cluttering the artist's message console.
+`bce_lib` provides `msg()` for artist-facing output and `dbg()` for
+debug-gated output. `dbg()` calls `print()` only when `BCE_DEBUG = 1`
+at the top of `bce_lib.py` (default 0). Flip it while chasing a bug;
+put it back before committing. A `log()` helper (unconditional
+print-only, no console) may be added during the cleanup pass for
+diagnostic detail that should always appear in the app log.
 
 The codebase is currently in a *dev storm* — log volume is high and
 noisy, and many existing calls are `msg()` when they should probably
@@ -388,6 +391,11 @@ Every one of these has been paid for in commits. Don't repay them.
   `.../miniconda3/envs/<env>/bin/python`. Docs and tooltip must say so.
 - **Do not** propose new features for v1. Cleanup and ship is the entire
   v1 mandate. Feature ideas go in the dev's notes, not the code.
+- **Do not** mismatch popup index and `TEMPLATE_N` constants. Flame
+  saves the popup value as a positional integer, not the label string.
+  `TEMPLATE_0` / `TEMPLATE_1` / … must stay in lockstep with the
+  `PopupEntry` order in the matching `.xml`. Off-by-one here silently
+  loads the wrong template.
 
 ---
 

@@ -26,8 +26,10 @@ Download the BCE release zip and unzip it somewhere. From the unzipped
 folder, run the installer:
 
 ```
-./install_bce.sh
+bash install_bce.sh
 ```
+
+(Use bash install_bce.sh, not ./install_bce.sh — zip downloads often lack the executable bit, which makes ./ fail with Permission denied. bash sidesteps it on Linux and Mac.)
 
 The installer will prompt for `sudo` (Flame's shared python folder is
 owned by root). It copies code to `/opt/Autodesk/shared/python/BCE/`
@@ -50,40 +52,15 @@ Fill in:
 - **Work Root** — where BCE writes job folders. Default `~/bce/bce_jobs` is
   fine for local use. LAN users see section 4b.
 - **Templates Dir** — `~/bce/templates` (the installer puts them there).
-- **Comfy Root** — path to your ComfyUI install (local/LAN only).
+- **Comfy Root** — path to your ComfyUI install (local only —
+  see section 4a for how to find it).
 - **Comfy Python** — the Python *executable* inside your Comfy env
-  (local/LAN only). **This is the most common setup mistake** — see
-  the gotcha below.
+  (local only — see section 4a for how to find it).
 - **Cloud API Key** — paste from [platform.comfy.org](https://platform.comfy.org)
   (cloud only).
 - **Backend Mode** — `local`, `lan`, or `cloud`.
 
 Click Save.
-
-### The Comfy Python gotcha
-
-`Comfy Python` is the Python **inside the Comfy environment**, not the
-Miniconda install folder. It usually looks like:
-
-```
-/path/to/miniconda3/envs/comfy/bin/python
-```
-
-It is **not** usually:
-
-```
-/path/to/miniconda3/python
-```
-
-Wrong path → BCE will fail to launch local Comfy with a `FileNotFoundError`.
-
-Test it in a terminal first:
-
-```
-/path/to/python /path/to/ComfyUI/main.py --help
-```
-
-If that prints Comfy's help, the path is right.
 
 ---
 
@@ -106,24 +83,72 @@ the default workflow), set BCE Setup:
 
 - Backend Mode → `local`
 - Comfy Root → your ComfyUI folder
-- Comfy Python → the env Python (see gotcha above)
+- Comfy Python → the env Python (see below)
 
-BCE launches Comfy for you when you render. You do not need to start it
-manually.
+BCE launches Comfy for you at the start of each render and stops it
+when done to recover VRAM. You do not need to start it manually —
+and stopping it is intentional, not a bug.
+
+### Finding your Comfy Root and Comfy Python
+
+These two trip up almost everyone — including me — so here's how to find them, not guess.
+
+**Comfy Root** is the folder you installed ComfyUI into (the one with `main.py`). Common spots:
+
+    ~/ComfyUI
+    ~/getAI/ComfyUI
+    /opt/comfy/ComfyUI
+
+If you followed comfy_install.md it's wherever you cloned it — most likely `~/ComfyUI`. Lost it?
+
+    find ~ -name main.py -path "*ComfyUI*" 2>/dev/null
+
+**Comfy Python** is trickier. ComfyUI runs in a *virtual environment* — an isolated Python with just Comfy's dependencies, separate from your system Python. (Miniconda users: that's a "conda environment.") Comfy Python is the `python` executable inside that env — not your system python, not the Miniconda base.
+
+Find it by activating the env and asking:
+
+    conda env list          # lists your environments and their folders
+    conda activate comfy    # use your env's actual name from that list
+    which python            # prints the full path — THIS is your Comfy Python
+
+Paste what `which python` prints, verbatim. It looks like:
+
+    /home/you/miniconda3/envs/comfy/bin/python
+
+Not the base python:
+
+    /home/you/miniconda3/bin/python      ← wrong
+
+Wrong path → BCE fails to launch local Comfy with a `FileNotFoundError`.
+
+Confirm before leaving the terminal:
+
+    /your/comfy/python /your/ComfyUI/main.py --help
+
+If that prints ComfyUI's help, both paths are right.
 
 ### 4b. LAN
 
-LAN render uses a shared filesystem so the artist workstation and the
-render node see job folders at the same absolute path. Once the mounts
-are in place, it behaves the same as local — ComfyUI is a web server
-either way.
+LAN mode requires both machines to use the same Work Root path.
+Job manifests written during prep embed absolute paths — if those
+paths don't resolve identically on the render node, the render fails.
+
+The standard setup achieves this with one bind mount: the artist's
+`~/bce/bce_jobs` folder is shared over the network *and* bind-mounted
+locally at `/mnt/bce_jobs`. The render node mounts the same share at
+the same path. Both machines set Work Root to `/mnt/bce_jobs`. Every
+path in every manifest resolves unchanged on both ends.
+
+**LAN Comfy must be running before you use BCE.** Unlike local mode,
+BCE does not start or stop Comfy on a LAN render node — the render
+node runs Comfy as a persistent service and BCE connects to it. Start
+Comfy on the render node before prepping or launching a job.
 
 **On the artist workstation:**
 
 1. Share `~/bce/bce_jobs` over the network (Samba, NFS, whatever your
    shop uses).
-2. Bind-mount `~/bce/bce_jobs` to `/mnt/bce_jobs` so the artist machine
-   sees its own files at the canonical LAN path. On Linux:
+2. Bind-mount `~/bce/bce_jobs` to `/mnt/bce_jobs`. On Linux:
    ```
    sudo mkdir -p /mnt/bce_jobs
    sudo mount --bind ~/bce/bce_jobs /mnt/bce_jobs

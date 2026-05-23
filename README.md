@@ -98,7 +98,7 @@ picking and configuring a backend.
 
 ## Requirements
 
-- Autodesk Flame 2023 or later, Linux or Mac
+- Autodesk Flame 2023.1 or later, Linux or Mac
 - One backend: a local NVIDIA GPU, a LAN render node, or a Comfy Cloud account
 
 ---
