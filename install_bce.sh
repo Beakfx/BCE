@@ -22,7 +22,7 @@ for dir in "${required_dirs[@]}"; do
 done
 
 if [ ! -d ".git" ]; then
-    log "Warning: .git folder not found. Continuing from: $REPO_ROOT"
+    log "Installing from archive (no .git) — continuing from: $REPO_ROOT"
 fi
 
 log "Installing Flame Python hooks..."
