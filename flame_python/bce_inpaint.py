@@ -513,7 +513,7 @@ def get_batch_custom_ui_actions():
                     "name": "Prepare Job",
                     "isVisible": scope_node,
                     "execute": run,
-                    "minimumVersion": "2023.1.0"
+                    "minimumVersion": "2023.1"
                 }
             ],
         }
