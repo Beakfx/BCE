@@ -100,6 +100,7 @@ picking and configuring a backend.
 
 - Autodesk Flame 2023.1 or later, Linux or Mac
 - One backend: a local NVIDIA GPU, a LAN render node, or a Comfy Cloud account
+- **Video nodes (SAM + future video nodes):** `ffmpeg` on the Flame workstation — see [install.md](docs/install.md) for install commands
 
 ---
 

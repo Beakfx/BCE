@@ -114,6 +114,20 @@ opening and experimenting in Comfy directly, but BCE won't load them.
 
 ---
 
+### SAM prep fails: `ffmpeg failed`
+
+**Symptom:** Log shows:
+```
+RuntimeError: ffmpeg failed
+```
+or the SAM node errors out at prep with no other message.
+
+**Cause:** `ffmpeg` is not installed or not on the PATH visible to Flame. BCE uses it to build the video transport for any video node (currently SAM) — required even on cloud backend.
+
+**Fix:** Install ffmpeg — see [install.md](install.md) section 1 "Getting ffmpeg" for the full install on Linux and Mac.
+
+---
+
 ### Local render fails with `FileNotFoundError`
 
 **Symptom:** Log shows:

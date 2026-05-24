@@ -15,8 +15,37 @@ takes to download models.
   - **Local backend** — a workstation with an NVIDIA GPU and ComfyUI installed
   - **LAN backend** — a render node on your network with ComfyUI installed, plus a shared filesystem
   - **Cloud backend** — a Comfy Cloud account ([platform.comfy.org](https://platform.comfy.org)) and API key. *Recommended default for Mac users — see section 4c.*
+- **Video nodes (SAM and any future node that transports video)** — require `ffmpeg` on the Flame workstation. See [Getting ffmpeg](#getting-ffmpeg) below. Outpaint and Inpaint don't need it.
 
-You can use more than one. Switching is a toggle in BCE Setup.
+You can use more than one backend. Switching is a toggle in BCE Setup.
+
+### Getting ffmpeg
+
+ffmpeg is needed for any BCE node that transports video — currently SAM, and any future video node.
+
+**Linux (Rocky/RHEL):** Not in the default repos — four commands to get the full build (ProRes, H.264, and more):
+
+```
+sudo dnf install -y epel-release
+sudo /usr/bin/crb enable
+sudo dnf install --nogpgcheck -y \
+  https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm \
+  https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-$(rpm -E %rhel).noarch.rpm
+sudo dnf install -y ffmpeg ffmpeg-devel
+```
+
+The `$(rpm -E %rhel)` picks up your RHEL version automatically — same commands work on Rocky 8 and 9.
+A minimal `ffmpeg` (free repo only, no `-devel`) is enough for BCE, but the full build is cheap insurance and unlocks ProRes and other codecs you'll want anyway. See also: [Jeff's write-up on logik.tv](https://forum.logik.tv/t/mp4-export/6969/4).
+
+**Mac:**
+
+```
+brew install ffmpeg
+```
+
+If you don't have Homebrew: [brew.sh](https://brew.sh)
+
+Confirm it's on the PATH: `ffmpeg -version`
 
 ---
 
