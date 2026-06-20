@@ -1,13 +1,6 @@
-# CLAUDE.md
+# AGENTS.md — Batch Comfy Extensions (BCE)
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
----
-
-# CLAUDE.md — Batch Comfy Extensions (BCE)
-
-Context for AI assistants working in this repo. Read top to bottom before
-editing code.
+Guidance for AI coding agents working in this repo.
 
 A companion file, `GLOSSARY.md`, defines terms, the job folder layout,
 naming conventions, and the per-category `[BCE:*]` tag details. This file
@@ -23,25 +16,17 @@ template against those values, and renders through one of three backends:
 local Comfy, LAN Comfy, or Comfy Cloud. The result is imported back into
 Flame.
 
-Author: Beak. Throughout this repo, the author is referred to as Beak, not Pete.
-
-Current categories: Outpaint, Inpaint, SAM.
-
-The project started as a single Outpaint node, then grew into a system.
-The "BCE" acronym reads as Batch Comfy Extensions in public; Flame artists
-who know the author (Beak) will also read it as Beak's Comfy Extension.
-Both are fine.
+Author: Beak. Current categories: Outpaint, Inpaint, SAM.
 
 **Audience for the code:** Flame artists who can read Python. Not Python
 engineers who happen to use Flame.
-
 
 ---
 
 ## Quality bar
 
-v1 quality bar: a Flame TD opens `bce_outpaint.py` on a Sunday and follows
-it end to end without Python expertise.
+A Flame TD opens `bce_outpaint.py` on a Sunday and follows it end to end
+without Python expertise.
 
 This outranks elegance, DRY, and abstraction. Flame is one controlled
 platform. Do not write code as if it has to run on forty.
@@ -87,10 +72,9 @@ the change, and wait for confirmation.
 
 ## How verification works
 
-Flame python only runs inside Flame. There is no headless test harness
-and none is planned for v1.
+Flame python only runs inside Flame. There is no headless test harness.
 
-What the agent can do:
+What an agent can do:
 
 - Syntax-check / compile-check Python:
   ```
@@ -98,19 +82,12 @@ What the agent can do:
   ```
 - Logic-review code paths.
 - Dry-run API JSON patching against a captured manifest if one is provided.
-- Read logs and `tree` output when the dev attaches them.
+- Read logs and `tree` output when the user attaches them.
 
-What the agent cannot do:
+What an agent cannot do:
 
-- Render, prep, launch, or import. Those all require the dev clicking
-  through Flame.
-
-When the dev is debugging, expect to receive:
-
-- `tree <job_id>/` output of a real job folder.
-- `grep -F "[BCE]" flame.app.log` (Flame's app log, filtered).
-- `runner.log` from the job's `comfy/` directory.
-- Comfy Cloud history / asset / error responses when the snag is on cloud.
+- Render, prep, launch, or import. Those all require clicking through
+  Flame.
 
 Do **not** claim a change is "tested." Say "compile-checks clean, logic
 looks right, ready for a prep/launch when you can run it."
@@ -119,8 +96,8 @@ looks right, ready for a prep/launch when you can run it."
 
 ## Logging
 
-Every log line from BCE Python uses the `[BCE]` prefix. That makes the
-filtered grep above work. Keep new log statements consistent with this.
+Every log line from BCE Python uses the `[BCE]` prefix, so the filtered
+grep below works: `grep -F "[BCE]" flame.app.log`.
 
 Flame provides two channels and BCE uses both deliberately:
 
@@ -134,16 +111,10 @@ Flame provides two channels and BCE uses both deliberately:
 `bce_lib` provides `msg()` for artist-facing output and `dbg()` for
 debug-gated output. `dbg()` calls `print()` only when `BCE_DEBUG = 1`
 at the top of `bce_lib.py` (default 0). Flip it while chasing a bug;
-put it back before committing. A `log()` helper (unconditional
-print-only, no console) may be added during the cleanup pass for
-diagnostic detail that should always appear in the app log.
+put it back before committing.
 
-The codebase is currently in a *dev storm* — log volume is high and
-noisy, and many existing calls are `msg()` when they should probably
-be `log()`. A cleanup pass is pending before publish. **Do not
-refactor existing calls unprompted.** The dev will lead that triage.
-When adding new log lines, match the volume of surrounding code — do
-not "tidy" while you're nearby.
+Don't refactor existing log calls unprompted while working nearby on
+something unrelated.
 
 ---
 
@@ -308,17 +279,16 @@ SAM, and future workflows have multiple loaders):
 2. An `InvertMask` is spliced between the LoadImage MASK output and
    downstream mask consumers.
 
-`[BCE:SAVE]` stays as RadianceDigitalCinemaWrite on cloud. The old
-`RadianceSaveEXR` cloud mutation is obsolete — do not reintroduce it.
+`[BCE:SAVE]` stays as RadianceDigitalCinemaWrite on cloud.
 
 ---
 
 ## Backends
 
 | Backend | Source transport        | Result transport             | Notes                          |
-|---------|-------------------------|------------------------------|--------------------------------|
+|---------|--------------------------|------------------------------|---------------------------------|
 | local   | EXR via Radiance Read   | EXR via Radiance Write       | Direct disk.                   |
-| LAN     | EXR via Radiance Read   | EXR via Radiance Write       | Shared filesystem. CPU-bound in practice; SAM deferred. |
+| LAN     | EXR via Radiance Read   | EXR via Radiance Write       | Shared filesystem.             |
 | cloud   | 16-bit RGBA TIFF upload | EXR download via `/api/view` | LoadImage substitution + mask invert; output filename from `history_v2`. |
 
 ### The cloud constraint (read this before designing a new template)
@@ -333,8 +303,8 @@ workflow:
 - Prefer nodes that exist on Comfy Cloud.
 - If a node is local-only, the whole template is local-only — label it
   that way and don't try to make it cloud-portable with runtime patching.
-- The cloud-side mutations BCE *will* do are already listed above
-  (LoadImage substitution, InvertMask splice). Do not add more.
+- The cloud-side mutations BCE does are already listed above (LoadImage
+  substitution, InvertMask splice). Do not add more.
 
 ### Cloud asset filenames
 
@@ -363,8 +333,6 @@ playing back a heavy timeline while this runs.
 
 ## Footguns — do not do these
 
-Every one of these has been paid for in commits. Don't repay them.
-
 - **Do not** rewire every LoadImage on cloud. Only the `[BCE:LOAD]`-
   tagged node. Multi-loader workflows (Qwen, SAM) break if you scan
   globally.
@@ -386,11 +354,9 @@ Every one of these has been paid for in commits. Don't repay them.
   is a warning that routes the user to `BCE > Setup and Config`.
 - **Do not** validate `comfy_root` / `comfy_py` strictly at save time —
   cloud-only users legitimately have neither.
-- **Comfy Python gotcha:** users (and the dev) will set `comfy_py` to
-  the miniconda root. It must be the env Python:
+- **Comfy Python gotcha:** users will set `comfy_py` to the miniconda
+  root. It must be the env Python:
   `.../miniconda3/envs/<env>/bin/python`. Docs and tooltip must say so.
-- **Do not** propose new features for v1. Cleanup and ship is the entire
-  v1 mandate. Feature ideas go in the dev's notes, not the code.
 - **Do not** mismatch popup index and `TEMPLATE_N` constants. Flame
   saves the popup value as a positional integer, not the label string.
   `TEMPLATE_0` / `TEMPLATE_1` / … must stay in lockstep with the
@@ -403,45 +369,12 @@ Every one of these has been paid for in commits. Don't repay them.
 
 `~/bce/bce_jobs/<category>/<job_id>/` is safe to delete between jobs —
 Flame imports are fully cached because BCE forces MediaHub `cache_mode`
-on during import and restores it after. This fixed the long-standing
-"missing media after purge" issue. **Do not change the cache-mode
-handling without understanding that history.**
+on during import and restores it after.
 
 The SAM transport movie under `<job>/source_video/` is kept after prep
 on purpose, so re-renders against the same source clip don't re-export
 the JPEG stream. The JPEG sequence itself is disposable after the
 transport movie is built.
-
----
-
-## Current state (v1 RC)
-
-Working: Outpaint, Inpaint, and SAM categories render local and cloud.
-Radiance Read/Write refactor complete across templates. Cloud transport
-(TIFF source, EXR or MP4 result via history_v2) working. SAM transport
-movie + Render Preview / Render Mattes flow working. Match the Batch
-FPS via `.clip` editRate. Installer and user-created config flow in
-place.
-
-Mandate from here to publish: **cleanup and ship.** No new features.
-
-Known debt (post-v1, not for this pass unless explicitly asked):
-
-
-- Inpaint+SAM work. Trim toward MES is in scope for cleanup.
-- Logging volume (dev storm) — dev-led cleanup pending.
-- SAM `preview_mode` bool is positional/fragile in the Matchbox channel
-  list.
-- `max_objects` can exceed the six exposed `Mask_N` toggles. Acceptable
-  for v1.
-- Import/result handling for video should eventually become shared with
-  still-image import.
-- LAN backend not smoke-tested since Radiance refactor.
-- Flux.2 Outpaint: green frame vs black frame, prompt sensitivity, color
-  shift — needs another pass.
-
-- `probe` is still the internal dict name for the Matchbox setup
-  snapshot. Rename candidate: `mbox_values`. Not urgent.
 
 ---
 

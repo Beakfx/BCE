@@ -25,6 +25,34 @@ if [ ! -d ".git" ]; then
     log "Installing from archive (no .git) — continuing from: $REPO_ROOT"
 fi
 
+# === ffmpeg prerequisite (used by SAM and any future video node) ===
+if ! command -v ffmpeg >/dev/null 2>&1; then
+    log "ffmpeg not found. BCE's SAM (and future video nodes) need it."
+    case "$(uname)" in
+        Darwin)
+            if command -v brew >/dev/null 2>&1; then
+                log "Installing ffmpeg via Homebrew..."
+                brew install ffmpeg
+            else
+                log "Homebrew not found. Install it first: https://brew.sh"
+                log "Then run: brew install ffmpeg"
+                log "Then re-run this installer."
+                exit 1
+            fi
+            ;;
+        Linux)
+            log "Install ffmpeg before continuing. See install.md section 1"
+            log "for the Rocky Linux commands (needs sudo and EPEL/RPM Fusion)."
+            log "Then re-run this installer."
+            exit 1
+            ;;
+        *)
+            log "Unsupported OS: $(uname)"
+            exit 1
+            ;;
+    esac
+fi
+
 log "Installing Flame Python hooks..."
 sudo mkdir -p "$FLAME_DEST"
 sudo rsync -a flame_python/ "$FLAME_DEST/"

@@ -14,7 +14,7 @@ takes to download models.
 - One of:
   - **Local backend** — a workstation with an NVIDIA GPU and ComfyUI installed
   - **LAN backend** — a render node on your network with ComfyUI installed, plus a shared filesystem
-  - **Cloud backend** — a Comfy Cloud account ([platform.comfy.org](https://platform.comfy.org)) and API key. *Recommended default for Mac users — see section 4c.*
+  - **Cloud backend** — a Comfy Cloud account ([platform.comfy.org](https://platform.comfy.org)) and API key. *Recommended default for Mac users — see [section 2](#2-mac-quick-path-cloud) for the short path.*
 - **Video nodes (SAM and any future node that transports video)** — require `ffmpeg` on the Flame workstation. See [Getting ffmpeg](#getting-ffmpeg) below. Outpaint and Inpaint don't need it.
 
 You can use more than one backend. Switching is a toggle in BCE Setup.
@@ -49,7 +49,55 @@ Confirm it's on the PATH: `ffmpeg -version`
 
 ---
 
-## 2. Install BCE
+## 2. Mac quick path (cloud)
+
+Most Mac users want the cloud backend — no ComfyUI install, no Python
+env to babysit, no GPU contention with Flame. This is the 5-minute path.
+
+If you're a power user who wants local Comfy on Apple Silicon, skip
+this and read [section 5](#5-pick-a-backend) — there's a community
+guide linked in §5a.
+
+Steps:
+
+1. **Install ffmpeg** (if you haven't already):
+   ```
+   brew install ffmpeg
+   ```
+   No Homebrew? Get it from [brew.sh](https://brew.sh) first.
+
+2. **Get a Comfy Cloud API key.** Sign up at
+   [platform.comfy.org](https://platform.comfy.org) and generate a key.
+
+   > [!WARNING]
+   > **Two sites, no link between them:** [cloud.comfy.org](https://cloud.comfy.org)
+   > is where workflows run. Account management and API keys live at
+   > [platform.comfy.org](https://platform.comfy.org), and there is no
+   > navigation between them. Go to platform.comfy.org first.
+
+3. **Install BCE.** Download the release zip, unzip it, run:
+   ```
+   bash install_bce.sh
+   ```
+   The installer asks for `sudo` and copies code to
+   `/opt/Autodesk/shared/python/BCE/` and user files to `~/bce/`.
+
+4. **Restart Flame.**
+
+5. **Configure BCE.** In Flame: **BCE → Setup and Config**. Fill in:
+   - **Backend Mode** → `cloud`
+   - **Cloud API Key** → paste the key from step 2
+   - Leave Comfy Root and Comfy Python blank
+   - Work Root and Templates Dir can stay at their defaults
+
+6. **Load the Matchbox nodes** — see [section 7](#7-load-the-bce-matchbox-nodes-in-flame).
+
+You're done. Skip to §7 unless something goes wrong; the rest of this
+doc is reference material.
+
+---
+
+## 3. Install BCE
 
 Download the BCE release zip and unzip it somewhere. From the unzipped
 folder, run the installer:
@@ -63,7 +111,7 @@ bash install_bce.sh
 The installer will prompt for `sudo` (Flame's shared python folder is
 owned by root). It copies code to `/opt/Autodesk/shared/python/BCE/`
 and user files to `~/bce/`. The Matchbox shaders that drive the BCE
-Batch nodes land in `~/bce/matchbox/` — you'll load them in section 5.
+Batch nodes land in `~/bce/matchbox/` — you'll load them in section 7.
 
 When the installer finishes, restart Flame.
 
@@ -72,19 +120,19 @@ the end of this doc.
 
 ---
 
-## 3. Run Setup
+## 4. Run Setup
 
 In Flame: **BCE → Setup and Config**.
 
 Fill in:
 
 - **Work Root** — where BCE writes job folders. Default `~/bce/bce_jobs` is
-  fine for local use. LAN users see section 4b.
+  fine for local use. LAN users see section 5b.
 - **Templates Dir** — `~/bce/templates` (the installer puts them there).
 - **Comfy Root** — path to your ComfyUI install (local only —
-  see section 4a for how to find it).
+  see section 5a for how to find it).
 - **Comfy Python** — the Python *executable* inside your Comfy env
-  (local only — see section 4a for how to find it).
+  (local only — see section 5a for how to find it).
 - **Cloud API Key** — paste from [platform.comfy.org](https://platform.comfy.org)
   (cloud only).
 - **Backend Mode** — `local`, `lan`, or `cloud`.
@@ -93,9 +141,9 @@ Click Save.
 
 ---
 
-## 4. Pick a backend
+## 5. Pick a backend
 
-### 4a. Local
+### 5a. Local
 
 You need ComfyUI installed and working on the same workstation as Flame.
 
@@ -105,7 +153,7 @@ for a Miniconda-based setup that doesn't touch your system Python.
 **Mac users:** that guide is Linux-only. For Apple Silicon, this
 [community install guide](https://github.com/vincyb/Installing-Comfyui-for-Apple-Mac-Silicon)
 is a reasonable starting point — PyTorch and launch flags differ enough
-that BCE doesn't ship a Mac guide. See section 4c for the cloud alternative.
+that BCE doesn't ship a Mac guide. See section 5c for the cloud alternative.
 
 Once Comfy runs standalone (browse to `http://127.0.0.1:8188` and load
 the default workflow), set BCE Setup:
@@ -156,7 +204,7 @@ Confirm before leaving the terminal:
 
 If that prints ComfyUI's help, both paths are right.
 
-### 4b. LAN
+### 5b. LAN
 
 LAN mode requires both machines to use the same Work Root path.
 Job manifests written during prep embed absolute paths — if those
@@ -203,7 +251,7 @@ physically, so switching modes is just the Backend Mode toggle — no
 path juggling. If the render farm is down, switch to cloud as the
 fallback.
 
-### 4c. Cloud
+### 5c. Cloud
 
 The easiest backend to set up — no Comfy install needed.
 
@@ -231,7 +279,7 @@ your GPU from exploding when you're hitting it hard.
 
 ---
 
-## 5. Get the templates running in Comfy first
+## 6. Get the templates running in Comfy first
 
 Before BCE, confirm the workflow dependencies are in place on your
 local Comfy.
@@ -248,7 +296,7 @@ Cloud skips this step entirely.
 
 ---
 
-## 6. Load the BCE Matchbox nodes in Flame
+## 7. Load the BCE Matchbox nodes in Flame
 
 After running the installer and BCE Setup, the Matchbox files live at
 `~/bce/matchbox/`.
@@ -294,7 +342,7 @@ cp -r matchbox/*  ~/bce/matchbox/
 cp -r templates/* ~/bce/templates/
 ```
 
-Restart Flame. Continue from section 3.
+Restart Flame. Continue from section 4.
 
 ---
 
@@ -308,7 +356,7 @@ The most common issues:
 - **"No BCE config found"** — expected on first run. Go to
   BCE → Setup and Config and fill it in.
 - **Local render fails with `FileNotFoundError`** — your Comfy Python
-  path is wrong. See the gotcha in section 3.
+  path is wrong. See "Finding your Comfy Root and Comfy Python" in section 5a.
 - **Cloud render fails with `401 Unauthorized`** — API key is missing
   or wrong. Re-paste from [platform.comfy.org](https://platform.comfy.org).
 
